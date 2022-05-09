@@ -20,7 +20,9 @@ const Home = () => {
     return (
         <div style={{marginLeft:'25%'}} className="container d-flex justify-content-center align-content-center w-75">
             <Link to={'/create'}>Add a coin to collection</Link>
-            <AllCoins coins={allCoinsSorted} setCoins={setCoins/}>
+            <AllCoins coins={allCoinsSorted} setCoins={setCoins} />
         </div>
     )
 }
+
+export default Home;

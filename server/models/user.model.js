@@ -1,3 +1,4 @@
+const Coin = require('../models/coin.model')
 const mongoose = require("mongoose");
 const bcrypt = require('bcrypt');
 
@@ -15,6 +16,7 @@ const UserSchema = new mongoose.Schema({
     email: {
         type: String,
         required: [true,'Email is required'],
+        unique: [true,'An account with this email address already exists'],
         validate: {
             validator: val => /^([\w-\.]+@([\w-]+\.)+[\w-]+)?$/.test(val),
             message: 'Please enter a valid email address'
@@ -25,7 +27,12 @@ const UserSchema = new mongoose.Schema({
         required: [true,'Password is required'],
         minlength: [8,'Password must be 8 characters or longer']
     },
-    
+    coins: [
+        {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'Coin'
+        }
+    ]
 },{timestamps:true});
 
 UserSchema.virtual("confirmPassword")

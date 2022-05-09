@@ -1,4 +1,5 @@
 const Coin =  require("../models/coin.model");
+const User = require("../models/user.model")
 
 module.exports = {
     findAllCoins: (req,res)=>{

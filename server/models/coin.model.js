@@ -1,7 +1,8 @@
 const mongoose = require("mongoose");
+const User = require('../models/user.model');
 
 const CoinSchema = new mongoose.Schema({
-    userId: { type: mongoose.Schema.Types.ObjectId, required: true, ref: 'User'},
+    
     coinType:{
         type: String,
         required: [true,'The type of coin is required'],
@@ -35,4 +36,4 @@ const CoinSchema = new mongoose.Schema({
 
 },{timestamps:true})
 
-module.exports = mongoose.Schema("Coin",CoinSchema);
+module.exports = mongoose.model("Coin",CoinSchema);

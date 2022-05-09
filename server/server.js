@@ -11,6 +11,7 @@ app.use(express.urlencoded({extended:true}));
 
 require('./config/mongoose.config');
 require('./routes/user.routes')(app)
+require('./routes/coin.routes')(app)
 
 const jwt = require("jsonwebtoken");
 
