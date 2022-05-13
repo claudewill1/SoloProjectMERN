@@ -1,63 +1,67 @@
-const Coin = require('../models/coin.model')
+const Coin = require("../models/coin.model");
 const mongoose = require("mongoose");
-const bcrypt = require('bcrypt');
+const bcrypt = require("bcrypt");
 
-const UserSchema = new mongoose.Schema({
+const UserSchema = new mongoose.Schema(
+  {
     firstName: {
-        type: String,
-        required: [true,'First name is required'],
-        minlength: [3,'First name must be at least 3 characters in length'],
+      type: String,
+      required: [true, "First name is required"],
+      minlength: [3, "First name must be at least 3 characters in length"],
     },
     lastName: {
-        type: String,
-        required: [true,'Last name is required'],
-        minlength: [3,'Last name must be at least 3 characters in length']
+      type: String,
+      required: [true, "Last name is required"],
+      minlength: [3, "Last name must be at least 3 characters in length"],
     },
     email: {
-        type: String,
-        required: [true,'Email is required'],
-        unique: [true,'An account with this email address already exists'],
-        validate: {
-            validator: val => /^([\w-\.]+@([\w-]+\.)+[\w-]+)?$/.test(val),
-            message: 'Please enter a valid email address'
-        }
+      type: String,
+      required: [true, "Email is required"],
+      unique: [true, "An account with this email address already exists"],
+      validate: {
+        validator: (val) => /^([\w-\.]+@([\w-]+\.)+[\w-]+)?$/.test(val),
+        message: "Please enter a valid email address",
+      },
     },
     password: {
-        type: String,
-        required: [true,'Password is required'],
-        minlength: [8,'Password must be 8 characters or longer']
+      type: String,
+      required: [true, "Password is required"],
+      minlength: [8, "Password must be 8 characters or longer"],
     },
-    coins: [
-        {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: 'Coin'
-        }
-    ]
-},{timestamps:true});
+    // TIG -- instead of embedding this here, lets add user_id ref to coin model
+    // coins: [
+    //   {
+    //     type: mongoose.Schema.Types.ObjectId,
+    //     ref: "Coin",
+    //   },
+    // ],
+  },
+  { timestamps: true }
+);
 
 UserSchema.virtual("confirmPassword")
-    .get(() => this._confirmPassword)
-    .set((value) => {
-        this._confirmPassword = value;
-    });
+  .get(() => this._confirmPassword)
+  .set((value) => {
+    this._confirmPassword = value;
+  });
 
 UserSchema.pre("validate", function (next) {
-    if (this.password !== this.confirmPassword) {
-        this.invalidate("confirmPassword", "Passwords must match");
-    }
-    next();
+  if (this.password !== this.confirmPassword) {
+    this.invalidate("confirmPassword", "Passwords must match");
+  }
+  next();
 });
 
 UserSchema.pre("save", function (next) {
-    bcrypt
-        .hash(this.password, 10)
-        .then((hash) => {
-        this.password = hash;
-        next();
-        })
-        .catch((err) => {
-        console.log("error saving hash");
-        console.log(err);
-        });
+  bcrypt
+    .hash(this.password, 10)
+    .then((hash) => {
+      this.password = hash;
+      next();
+    })
+    .catch((err) => {
+      console.log("error saving hash");
+      console.log(err);
+    });
 });
-module.exports = mongoose.model('User',UserSchema);
+module.exports = mongoose.model("User", UserSchema);
